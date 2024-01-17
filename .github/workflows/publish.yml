@@ -14,12 +14,12 @@ jobs:
       - name: "Zip package"
         run: |
           cp bin/VulcaPack/PreventLoosingScrap.dll mod/PreventLoosingScrap.dll
-          zip -r ${{ github.event.repository.name }}-${{ github.ref_name }}.zip mod/*
+          cd mod/ && zip -r ${{ github.event.repository.name }}-${{ github.ref_name }}.zip .
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.repository.name }}-${{ github.ref_name }}
-          path: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip
+          path: mod/${{ github.event.repository.name }}-${{ github.ref_name }}.zip
       - uses: GreenTF/upload-thunderstore-package@v4.3
         with:
           namespace: neahyu_friends
@@ -28,6 +28,6 @@ jobs:
           version: ${{ github.ref_name }}
           community: lethal-company
           repo: thunderstore.io
-          file: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip 
+          file: mod/${{ github.event.repository.name }}-${{ github.ref_name }}.zip 
           categories: |
             serverside
