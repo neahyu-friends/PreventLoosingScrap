@@ -12,9 +12,9 @@ namespace PreventLoosingScrap {
 
 			Plugin.Log.LogInfo("ProtectionPatch -> Rate = " + lostRate);
 
-			/*if (lostRate <= 1 || despawnAllItems) {
+			if (lostRate <= 1 || despawnAllItems) {
 				return true;
-			}*/
+			}
 
 			if (__instance.IsHost || __instance.IsServer) {
 				Plugin.Log.LogInfo("ProtectionPatch -> " + despawnAllItems + " : " + StartOfRound.Instance.allPlayersDead.ToString());
@@ -22,7 +22,7 @@ namespace PreventLoosingScrap {
 				if (StartOfRound.Instance.allPlayersDead) {
 					GrabbableObject[] allItems = GameObject.FindObjectsOfType<GrabbableObject>();
 
-					//System.Random rng = new(StartOfRound.Instance.randomMapSeed + 83);
+					System.Random rng = new(StartOfRound.Instance.randomMapSeed + 83);
 
 					void DeleteItem(GrabbableObject item) {
 						Plugin.Log.LogInfo("Despawning item: " + item.name + " in ship: " + item.isInShipRoom);
@@ -36,8 +36,7 @@ namespace PreventLoosingScrap {
 
 					foreach (GrabbableObject item in allItems) {
 						if (item.isInShipRoom) {
-							Plugin.Log.LogInfo("Item found : " + item.name);
-							if (!item.itemProperties.isScrap || ShouldSaveScrap(/* rng, */lostRate)) {
+							if (!item.itemProperties.isScrap || ShouldSaveScrap(rng, lostRate)) {
 								Plugin.Log.LogInfo("Preserving ship item: " + item.name);
 							}
 							else {
@@ -62,9 +61,8 @@ namespace PreventLoosingScrap {
 			return true;
 		}
 
-		public static bool ShouldSaveScrap(/*System.Random rng, */int rate) {
-			return true;
-			//return rng.Next(0, 101) <= rate;
+		public static bool ShouldSaveScrap(System.Random rng, int rate) {
+			return (rng.Next(0, 100) >= rate);
 		}
 	}
 }

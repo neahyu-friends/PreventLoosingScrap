@@ -3,7 +3,6 @@ using BepInEx.Logging;
 using UnityEngine;
 using HarmonyLib;
 using Unity.Netcode;
-// using Amrv.ConfigurableCompany;
 
 namespace PreventLoosingScrap
 {
