@@ -1,0 +1,41 @@
+name: Thunderstore publish
+run-name: 
+on:
+  release:
+    types: [ published ]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '7.0.x' ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: dotnet build
+        run: dotnet build
+      #- name: "Change version in manifest"
+      #  run: |
+      #    cat manifest.json | jq ".version_number = \"$(echo '${{ github.ref_name }}' | sed -e 's/^v//')\"" > manifest.json
+      #- name: "Zip package"
+      #  run: |
+      #    zip -r ${{ github.event.repository.name }}-${{ github.ref_name }}.zip . -x ".git/*" ".github/*"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-${{ github.ref_name }}
+          path: bin/VulcaPack/PreventLoosingScrap.dll
+      #- uses: GreenTF/upload-thunderstore-package@v4.3
+      #  with:
+      #    namespace: neahyu_friends
+      #    name: ${{ github.event.repository.name }}
+      #    token: ${{ secrets.THUNDERSTORE_TOKEN }}
+      #    version: ${{ github.ref_name }}
+      #    community: lethal-company
+      #    repo: thunderstore.io
+      #    file: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip 
+      #    categories: |
+      #      modpacks
